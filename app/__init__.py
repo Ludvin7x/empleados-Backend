@@ -27,7 +27,6 @@ def create_app():
         allow_headers=["Content-Type", "Authorization"]
     )
 
-    # Inicializar extensión DB y cerrar conexión automáticamente
     init_app(app)
 
     from app.routes import health
@@ -37,15 +36,17 @@ def create_app():
     api.add_namespace(departments.ns, path='/api/departamentos')
     api.add_namespace(health.ns, path='/health')
 
-    # Comandos CLI para base de datos
+  # ---- CLI commands 
     @app.cli.command("init-db")
     def init_db_command():
+        """Create tables."""
         init_db()
-        print("Base de datos inicializada desde CLI")
+        print("Database initialized via CLI")
 
-    @app.cli.command("insert-data")
-    def insert_data_command():
-        insertar_datos()
-        print("Datos insertados desde CLI")
+    @app.cli.command("seed-data")
+    def seed_data_command():
+        """Insert seed data."""
+        seed_data()
+        print("Seed data inserted via CLI")
 
     return app
