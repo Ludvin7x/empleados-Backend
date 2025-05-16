@@ -8,7 +8,7 @@
 A RESTful API built with **Flask-RESTX** for managing employees and departments. This project is designed with a modular architecture and deployed on Render.
 
 🔗 **Live Demo**:  
-👉 [https://empleados-backend-3b43.onrender.com](https://empleados-backend-3b43.onrender.com)
+👉 [empleados-backend-3b43.onrender.com](https://empleados-backend-3b43.onrender.com)
 
 ---
 
@@ -45,17 +45,13 @@ A RESTful API built with **Flask-RESTX** for managing employees and departments.
 ├── requirements.txt
 └── README.md
 
-yaml
-Copiar
-Editar
-
 ---
 
 ## 🧑‍💻 Local Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/Ludvin7x/empleados-Backend.git
 cd your-repo
 
 # Create and activate a virtual environment
@@ -71,7 +67,9 @@ flask insert-data
 
 # Start the development server
 flask run
-📡 Available Endpoints
+```
+
+## 📡 Available Endpoints
 GET /api/empleados/
 
 POST /api/empleados/
@@ -88,7 +86,7 @@ GET /health — Health check
 
 Swagger UI documentation is available at the root URL.
 
-⚙️ Deployment
+## ⚙️ Deployment
 The project is deployed on Render using render.yaml to automate:
 
 Dependency installation
@@ -101,7 +99,7 @@ Environment variable configuration
 
 No additional manual steps are required after pushing to GitHub.
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 Python 3.10+
 
 Flask + Flask-RESTX
