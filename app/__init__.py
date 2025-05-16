@@ -22,7 +22,7 @@ def create_app():
 
     CORS(
         app,
-        origins=cors_origin_checker,
+        origins=["http://localhost:4200", "https://portafolio-lud.netlify.app"],
         supports_credentials=True,
         allow_headers=["Content-Type", "Authorization"]
     )
