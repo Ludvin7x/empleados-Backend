@@ -15,9 +15,10 @@ def create_app():
         "supports_credentials": True
     }})
 
-    from app.routes import empleados, departamentos
+    from app.routes import empleados, departamentos, health
     api.init_app(app)
     api.add_namespace(empleados.ns, path='/api/empleados')
     api.add_namespace(departamentos.ns, path='/api/departamentos')
+    api.add_namespace(health.ns, path='api/health')
 
     return app
