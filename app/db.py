@@ -1,47 +1,93 @@
 import sqlite3
 import click
 import os
+from flask import g
 
-# Ruta absoluta de la base de datos
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'empleados.db')
+DB_PATH = os.path.join(BASE_DIR, 'employees.db')
+
+def get_db():
+    if 'db' not in g:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        g.db = conn
+    return g.db
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 def init_db():
-    with sqlite3.connect(DB_PATH) as conn:
+    try:
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS empleados (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            apellido TEXT NOT NULL,
-            departamento_id INTEGER NOT NULL,
-            fecha_contratacion TEXT NOT NULL,
-            nombre_cargo TEXT NOT NULL
-        )''')
-        cursor.execute('''CREATE TABLE IF NOT EXISTS departamentos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL
-        )''')
-    click.echo('Base de datos inicializada')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS employees (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                department_id INTEGER NOT NULL,
+                hire_date TEXT NOT NULL,
+                job_title TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS departments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
+        conn.close()
+        click.echo('Database initialized successfully')
+    except Exception as e:
+        click.echo(f'Error initializing database: {e}')
 
-def insertar_datos():
-    departamentos = [
-        (1, 'Recursos Humanos'),
-        (2, 'Informatica'),
-        (3, 'Ventas'),
+def insert_seed_data():
+    departments = [
+        (1, 'Human Resources'),
+        (2, 'IT'),
+        (3, 'Sales'),
         (4, 'Marketing'),
-        (5, 'Bodega')
+        (5, 'Warehouse')
     ]
-    empleados = [
-        (1, 'Juan', 'Pérez', 1, '2023-01-01', 'Gerente'),
-        (2, 'María', 'Gómez', 2, '2023-01-02', 'Desarrollador'),
-        (3, 'Carlos', 'Lopez', 3, '2023-01-03', 'Vendedor'),
-        (4, 'Ana', 'Fernández', 4, '2023-01-04', 'Marketing Specialist')
+    employees = [
+        (1, 'John', 'Perez', 1, '2023-01-01', 'Manager'),
+        (2, 'Mary', 'Gomez', 2, '2023-01-02', 'Developer'),
+        (3, 'Charles', 'Lopez', 3, '2023-01-03', 'Salesperson'),
+        (4, 'Anna', 'Fernandez', 4, '2023-01-04', 'Marketing Specialist')
     ]
-    with sqlite3.connect(DB_PATH) as conn:
+    try:
+        conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
-        cursor.executemany("INSERT OR IGNORE INTO departamentos (id, nombre) VALUES (?, ?)", departamentos)
+        cursor.executemany("INSERT OR IGNORE INTO departments (id, name) VALUES (?, ?)", departments)
         cursor.executemany(
-            "INSERT OR IGNORE INTO empleados (id, nombre, apellido, departamento_id, fecha_contratacion, nombre_cargo) VALUES (?, ?, ?, ?, ?, ?)", 
-            empleados
+            "INSERT OR IGNORE INTO employees (id, first_name, last_name, department_id, hire_date, job_title) VALUES (?, ?, ?, ?, ?, ?)", 
+            employees
         )
-    click.echo('Datos iniciales insertados')
+        conn.commit()
+        conn.close()
+        click.echo('Seed data inserted successfully')
+    except Exception as e:
+        click.echo(f'Error inserting seed data: {e}')
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
+
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+def init():
+    """Initialize the database."""
+    init_db()
+
+@cli.command()
+def seed():
+    """Insert initial seed data."""
+    insert_seed_data()
+
+if __name__ == '__main__':
+    cli()
