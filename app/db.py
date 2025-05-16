@@ -44,7 +44,7 @@ def init_db():
     except Exception as e:
         click.echo(f'Error initializing database: {e}')
 
-def insert_seed_data():
+def seed_data():
     departments = [
         (1, 'Human Resources'),
         (2, 'IT'),

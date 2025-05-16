@@ -2,14 +2,13 @@ from app.routes import departments, employees
 from flask import Flask
 from flask_restx import Api
 from flask_cors import CORS
-from app.db import init_db, insertar_datos, init_app
+from app.db import init_db, seed_data, init_app
 
 api = Api(version='1.0', title='API Gestión Empleados', description='Una API para gestionar empleados y departamentos')
 
 def create_app():
     app = Flask(__name__)
 
-    # Configurar CORS con función personalizada para orígenes permitidos
     import re
     def cors_origin_checker(origin):
         if origin is None:
@@ -31,7 +30,6 @@ def create_app():
     # Inicializar extensión DB y cerrar conexión automáticamente
     init_app(app)
 
-    # Importar namespaces (después de crear app)
     from app.routes import health
 
     api.init_app(app)
