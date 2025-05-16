@@ -4,9 +4,6 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    deployCommand: |
-      flask init-db
-      flask seed-data
     startCommand: gunicorn wsgi:app
     healthCheckPath: /
     envVars:

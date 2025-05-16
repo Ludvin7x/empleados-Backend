@@ -38,11 +38,17 @@ def init_db():
                 name TEXT NOT NULL
             )
         ''')
+
+        cursor.execute("SELECT COUNT(*) FROM departments")
+        count = cursor.fetchone()[0]
+        if count == 0:
+            seed_data()
+
         conn.commit()
         conn.close()
-        click.echo('Database initialized successfully')
+        print('Database initialized successfully')
     except Exception as e:
-        click.echo(f'Error initializing database: {e}')
+        print(f'Error initializing database: {e}')
 
 def seed_data():
     departments = [
