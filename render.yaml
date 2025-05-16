@@ -11,7 +11,6 @@ services:
         value: app
       - key: FLASK_ENV
         value: production
-    # Run these commands después de instalar dependencias y antes de iniciar la app
     postDeploy:
       - flask init-db
       - flask insert-data
