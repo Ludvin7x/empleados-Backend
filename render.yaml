@@ -11,6 +11,6 @@ services:
         value: production
       - key: FLASK_APP
         value: app
-    postDeploy:
+postDeploy:
       - flask init-db
       - flask seed-data
