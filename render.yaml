@@ -6,11 +6,11 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn wsgi:app
     healthCheckPath: /
-envVars:
-  - key: FLASK_ENV
-    value: production
-  - key: FLASK_APP
-    value: app
-postDeploy:
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_APP
+        value: app
+    postDeploy:
       - flask init-db
       - flask seed-data
