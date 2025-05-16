@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: gestion-empleados-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask run --host=0.0.0.0 --port=$PORT
+    healthCheckPath: /
+    envVars:
+      - key: FLASK_APP
+        value: app
+      - key: FLASK_ENV
+        value: production
+    # Run these commands después de instalar dependencias y antes de iniciar la app
+    postDeploy:
+      - flask init-db
+      - flask insert-data
