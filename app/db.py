@@ -87,7 +87,7 @@ def init():
 @cli.command()
 def seed():
     """Insert initial seed data."""
-    insert_seed_data()
+    seed_data()
 
 if __name__ == '__main__':
     cli()

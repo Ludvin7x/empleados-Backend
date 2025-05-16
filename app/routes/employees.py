@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Namespace, Resource
 from app.db import get_db
-from app.validators import validate_employee  # Cambiado a inglés
+from app.validators import validate_employee 
 
 ns = Namespace('employees', description='Employee operations')
 
