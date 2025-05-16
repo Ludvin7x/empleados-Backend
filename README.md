@@ -30,15 +30,15 @@ A RESTful API built with **Flask-RESTX** for managing employees and departments.
 
 .
 ├── app/
-│ ├── init.py
-│ ├── db/
-│ │ └── init_db.py
-│ ├── routes/
-│ │ ├── empleados.py
-│ │ ├── departamentos.py
-│ │ └── health.py
-│ └── models/
-│ └── schemas.py
+│   ├── init.py
+│   ├── db/
+│   │   └── init_db.py
+│   ├── routes/
+│   │   ├── employees.py
+│   │   ├── departments.py
+│   │   └── health.py
+│   └── models/
+│       └── schemas.py
 ├── empleados.db
 ├── wsgi.py
 ├── render.yaml
