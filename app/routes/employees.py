@@ -49,7 +49,6 @@ class EmployeeList(Resource):
             )
             conn.commit()
             new_id = cur.lastrowid
-            # Obtener empleado insertado con departamento para devolver
             row = conn.execute('''
                 SELECT e.id, e.first_name, e.last_name, e.job_title, e.hire_date,
                        d.id as department_id, d.name as department_name
@@ -60,3 +59,49 @@ class EmployeeList(Resource):
             return row_to_employee(row), 201
         except Exception as e:
             return {'message': 'Error inserting employee: ' + str(e)}, 500
+        
+@ns.route('/<int:id>')
+@ns.route('/<int:id>/')
+class Employee(Resource):
+    def options(self, id):
+        return {}, 200
+
+    def get(self, id):
+        conn = get_db()
+        row = conn.execute('''
+            SELECT e.id, e.first_name, e.last_name, e.job_title, e.hire_date,
+                   d.id as department_id, d.name as department_name
+            FROM employees e
+            LEFT JOIN departments d ON e.department_id = d.id
+            WHERE e.id = ?
+        ''', (id,)).fetchone()
+
+        if row is None:
+            return {'message': 'Employee not found'}, 404
+        return row_to_employee(row), 200
+
+    def put(self, id):
+        data = request.get_json()
+        is_valid, message = validate_employee(data)
+        if not is_valid:
+            return {'message': message}, 400
+
+        conn = get_db()
+        cur = conn.execute(
+            '''UPDATE employees SET first_name=?, last_name=?, department_id=?, hire_date=?, job_title=? WHERE id=?''',
+            (data['first_name'], data['last_name'], data['department_id'], data['hire_date'], data['job_title'], id)
+        )
+        conn.commit()
+
+        if cur.rowcount == 0:
+            return {'message': 'Employee not found'}, 404
+        
+        row = conn.execute('''
+            SELECT e.id, e.first_name, e.last_name, e.job_title, e.hire_date,
+                   d.id as department_id, d.name as department_name
+            FROM employees e
+            LEFT JOIN departments d ON e.department_id = d.id
+            WHERE e.id = ?
+        ''', (id,)).fetchone()
+
+        return row_to_employee(row), 200

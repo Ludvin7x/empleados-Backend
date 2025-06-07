@@ -9,22 +9,12 @@ api = Api(version='1.0', title='API Gestión Empleados', description='Una API pa
 def create_app():
     app = Flask(__name__)
 
-    import re
-    def cors_origin_checker(origin):
-        if origin is None:
-            return False
-        allowed_origins = [
-            "http://localhost:4200",
-            "https://portafolio-lud.netlify.app",
-        ]
-        netlify_pattern = re.compile(r"^https://.*\.netlify\.app$")
-        return origin in allowed_origins or netlify_pattern.match(origin)
-
     CORS(
         app,
-        origins=["http://localhost:4200", "https://portafolio-lud.netlify.app"],
+        resources={r"/api/*": {"origins": ["http://localhost:4200", "https://empleados-frontend.netlify.app"]}},
         supports_credentials=True,
-        allow_headers=["Content-Type", "Authorization"]
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
 
     init_app(app)
