@@ -105,3 +105,12 @@ class Employee(Resource):
         ''', (id,)).fetchone()
 
         return row_to_employee(row), 200
+    
+    def delete(self, id):
+        conn = get_db()
+        cur = conn.execute('DELETE FROM employees WHERE id = ?', (id,))
+        conn.commit()
+
+        if cur.rowcount == 0:
+            return {'message': 'Employee not found'}, 404
+        return {'message': 'Employee deleted successfully'}, 200
